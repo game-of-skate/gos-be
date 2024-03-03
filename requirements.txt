@@ -1,0 +1,6 @@
+Django==4.2.10
+djangorestframework==3.14.0
+markdown==3.5.2
+psycopg2-binary>=2.9
+pytest==8.0.2
+pytest-dotenv
