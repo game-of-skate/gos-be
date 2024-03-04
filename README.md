@@ -15,7 +15,7 @@ navigate to [http://localhost:8000/admin/login/?next=/admin/](http://localhost:8
 `src/gos/gos/.env.local`
 
 ## Test App
-*While the app is running* from main directory (same directory as `Makefile`) run:
+**While the app is running in docker** from main directory (same directory as `Makefile`) run:
 `make test-app`
 
 
@@ -24,7 +24,9 @@ navigate to [http://localhost:8000/admin/login/?next=/admin/](http://localhost:8
 ### Docker
 
 Q: I am getting `[48720] Failed to execute script docker-compose`
+
 A: Try running Docker and trying again.
 
 Q: I add things to requirements.txt but they're not getting added! why?
+
 A: Try clearing the cache: `docker system prune -a`
