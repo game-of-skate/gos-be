@@ -27,6 +27,7 @@ Q: I am getting `[48720] Failed to execute script docker-compose`
 
 A: Try running Docker and trying again.
 
+
 Q: I add things to requirements.txt but they're not getting added! why?
 
 A: Try clearing the cache: `docker system prune -a`
