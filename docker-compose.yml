@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
     env_file:
-      - src/gos/gos/.env.local
+      - src/gos/.env
   
   db:
     image: postgres:13
@@ -22,6 +22,8 @@ services:
       POSTGRES_USER: db_user
       POSTGRES_PASSWORD: db_password
       POSTGRES_DB: db_name
+    ports:
+      - 5432:5432      
       # by default postgres listens on 5432
 
   db_test:
