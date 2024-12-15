@@ -1,8 +1,9 @@
-start-app:
+start-docker:
 	docker-compose up
 
-stop-app:
+stop-docker:
 	docker-compose down -v
 
-test-app:
+test:
 	docker exec gos-be_web_1 bash -c "pytest -svv"
+

@@ -9,28 +9,34 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 from pathlib import Path
+import environ
+from oauth2_provider import settings as oauth2_settings
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 
+# SECURITY WARNING: don't run with debug turned on in production!
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-ENV = os.getenv('ENV')
 
-DEBUG = False
-ALLOWED_HOSTS = []
-if ENV in ['local', 'dev']:
-    DEBUG = True
-    ALLOWED_HOSTS = ['*']
+# False if not in os.environ because of casting above
+DEBUG = env("DEBUG", False)
 
+ALLOWED_HOSTS = ["*"] if DEBUG else []
 
 # Application definition
 
@@ -45,11 +51,16 @@ INSTALLED_APPS = [
 ]
 # 3rd party apps
 INSTALLED_APPS += [
-    'rest_framework',
+    "rest_framework",
+    "rest_framework.authtoken",
+    # OAuth
+    "oauth2_provider",
+    "social_django",
+    "drf_social_oauth2",
+    # /OAuth
 ]
-# original apps 
-INSTALLED_APPS += [
-]
+# original apps
+INSTALLED_APPS += []
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -63,6 +74,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "gos.urls"
 
+# TODO after login works, check and see if  TEMPLATE_CONTEXT_PROCESSORS and TEMPLATES
+# are even envessary, and if not, remove.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "social_django.context_processors.backends",
+    "social_django.context_processors.login_redirect",
+)
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -74,6 +92,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
@@ -86,16 +106,16 @@ WSGI_APPLICATION = "gos.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -104,11 +124,41 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+        # OAuth
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
+        'drf_social_oauth2.authentication.SocialAuthentication',
+        # / OAuth
+
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+AUTHENTICATION_BACKENDS = (
+    # list of supported backends:
+    # https://python-social-auth.readthedocs.io/en/latest/backends/index.html#supported-backends
+
+    "drf_social_oauth2.backends.DjangoOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+seconds_1_month = 2.628e6
+oauth2_settings.DEFAULTS['ACCESS_TOKEN_EXPIRE_SECONDS'] = seconds_1_month
+
+ACTIVATE_JWT = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
