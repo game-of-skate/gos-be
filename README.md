@@ -9,14 +9,14 @@ Requirements:
 ### Set Up Your Local Development Environment
  - clone this repo
  - `cd` into `gos-be`
- - `make start-app`
+ - `make start-docker`
 
 navigate to [http://localhost:8000/admin/login/?next=/admin/](http://localhost:8000/admin/login/?next=/admin/) in your broser and log in with the `DJANGO_SUPERUSER_USERNAME` and `DJANGO_SUPERUSER_PASSWORD` in 
-`src/gos/gos/.env.local`
+`src/gos/.env`
 
 ## Test App
 **While the app is running in docker** from main directory (same directory as `Makefile`) run:
-`make test-app`
+`make test`
 
 
 ## Troubleshooting

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import environ
+from oauth2_provider import settings as oauth2_settings
 
 env = environ.Env(
     # set casting, default value
@@ -20,10 +21,6 @@ env = environ.Env(
 )
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
-
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# BASE_DIR is /Users/mic/dev/GameOfSkate/gos-be/src/gos
-print(f"\n\nBASE_DIR! is {BASE_DIR}")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Take environment variables from .env file
@@ -56,9 +53,11 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     "rest_framework",
     "rest_framework.authtoken",
+    # OAuth
     "oauth2_provider",
     "social_django",
     "drf_social_oauth2",
+    # /OAuth
 ]
 # original apps
 INSTALLED_APPS += []
@@ -139,15 +138,28 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
+        # OAuth
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
+        'drf_social_oauth2.authentication.SocialAuthentication',
+        # / OAuth
+
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 AUTHENTICATION_BACKENDS = (
+    # list of supported backends:
+    # https://python-social-auth.readthedocs.io/en/latest/backends/index.html#supported-backends
+
     "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
 
+seconds_1_month = 2.628e6
+oauth2_settings.DEFAULTS['ACCESS_TOKEN_EXPIRE_SECONDS'] = seconds_1_month
+
 ACTIVATE_JWT = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
