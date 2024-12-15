@@ -36,7 +36,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG", False)
 
-ALLOWED_HOSTS = ["*"] if DEBUG else []
+ALLOWED_HOSTS = ["*"] if DEBUG else ["www.gameofskateapp.com"]
 
 # Application definition
 
@@ -108,7 +108,6 @@ WSGI_APPLICATION = "gos.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
         "NAME": env("DB_NAME"),
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD"),
