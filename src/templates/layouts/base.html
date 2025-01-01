@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+
+<html lang="en">
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block meta %}{% endblock %}
+
+    <link rel="canonical" href="https://{{ request.get_host }}{{ request.get_full_path }}">
+    <!-- <link rel="shortcut icon" href="{% static "images/favicon.ico" %}"> -->
+
+    <title>Game of Skate{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap Core CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static "css/main.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/footer.css" %}" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block stylesheets %}{% endblock %}
+  </head>
+
+
+<body>
+
+    <header>
+    </header>
+
+
+      {% block content %}
+      {% endblock %}
+    
+</body>
+
+
+</main>
+  </body>
+</html>
+
+
