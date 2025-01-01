@@ -6,4 +6,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    path("api/games/", include("games.urls")),
 ]

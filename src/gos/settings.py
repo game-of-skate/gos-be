@@ -60,7 +60,7 @@ INSTALLED_APPS += [
     # /OAuth
 ]
 # original apps
-INSTALLED_APPS += []
+INSTALLED_APPS += ["games"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -123,41 +123,33 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
         # OAuth
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
-        'drf_social_oauth2.authentication.SocialAuthentication',
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",  # django-oauth-toolkit >= 1.0.0
+        "drf_social_oauth2.authentication.SocialAuthentication",
         # / OAuth
-
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 AUTHENTICATION_BACKENDS = (
     # list of supported backends:
     # https://python-social-auth.readthedocs.io/en/latest/backends/index.html#supported-backends
-
     "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
 
 seconds_1_month = 2.628e6
-oauth2_settings.DEFAULTS['ACCESS_TOKEN_EXPIRE_SECONDS'] = seconds_1_month
+oauth2_settings.DEFAULTS["ACCESS_TOKEN_EXPIRE_SECONDS"] = seconds_1_month
 
 ACTIVATE_JWT = True
-SOCIAL_AUTH_JSONFIELD_ENABLED = True # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
+SOCIAL_AUTH_JSONFIELD_ENABLED = True  # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
