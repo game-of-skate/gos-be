@@ -63,13 +63,19 @@ INSTALLED_APPS += [
     "allauth.socialaccount",
     #'allauth.socialaccount.providers.apple',
     # https://docs.allauth.org/en/latest/socialaccount/providers/apple.html
+    
     #'allauth.socialaccount.providers.facebook',
     # https://docs.allauth.org/en/latest/socialaccount/providers/facebook.html
-    "allauth.socialaccount.providers.google",
+    
+    # NOTE i made android and ios clients but i don't understand the callback url in these docs
+    # https://dj-rest-auth.readthedocs.io/en/latest/installation.html#google
+    # did not set that, maybe these are not written for mobile and i need to do custom stuff?
+    #"allauth.socialaccount.providers.google",
+    
     # 'allauth.socialaccount.providers.instagram',
     # https://docs.allauth.org/en/latest/socialaccount/providers/instagram.html
-    # 'allauth.socialaccount.providers.telegram',
-    # https://docs.allauth.org/en/latest/socialaccount/providers/telegram.html
+    
+    'allauth.socialaccount.providers.telegram',
     # </social auth>
 ]
 # original apps
@@ -191,13 +197,30 @@ SOCIALACCOUNT_PROVIDERS = {
         # For each OAuth based provider, either add a ``SocialApp``
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
-        "APP": {
-            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_CLIENT_ID", ""),
-            "secret": env("DJANGO_SOCIALACCOUNT_GOOGLE_SECRET", ""),
-            "key": env("DJANGO_SOCIALACCOUNT_GOOGLE_KEY", ""),
-        },
+        # NOTE it looks like secret and key are web only ... ? not sure.
+        "APPS": [
+            {
+            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_ANDROID_CLIENT_ID", ""),
+            },
+            {
+            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_IOS_CLIENT_ID", ""),
+            },            
+        ],
         # The following provider-specific settings will be used for all apps:
         "SCOPE": ["profile", "email",],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
         "AUTH_PARAMS": {"access_type": "online",},
+    },
+    'telegram': {
+        # Attention! If your server time is different from the telegram server time, you need NTP.
+        'APP': {
+            "client_id": env("DJANGO_SOCIALACCOUNT_TELEGRAM_BOT_ID", ""),
+            "secret": env("DJANGO_SOCIALACCOUNT_TELEGRAM_BOT_SECRET", ""),
+        },
+        # The default value of the auth_date_validity is 30 seconds.
+        'AUTH_PARAMS': {'auth_date_validity': 30},
     }
+
 }
