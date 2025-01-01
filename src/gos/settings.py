@@ -65,7 +65,7 @@ INSTALLED_APPS += [
     # </social auth>
 ]
 # original apps
-INSTALLED_APPS += []
+INSTALLED_APPS += ["games"]
 
 SITE_ID = 1  # needed for 'allauth.socialaccount'
 
