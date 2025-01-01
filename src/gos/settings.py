@@ -13,18 +13,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import environ
-from oauth2_provider import settings as oauth2_settings
 
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+environ.Env.read_env(os.path.join(BASE_DIR,"gos", ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -53,11 +52,6 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     "rest_framework",
     "rest_framework.authtoken",
-    # OAuth
-    "oauth2_provider",
-    "social_django",
-    "drf_social_oauth2",
-    # /OAuth
 ]
 # original apps
 INSTALLED_APPS += []
@@ -74,17 +68,20 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "gos.urls"
 
-# TODO after login works, check and see if  TEMPLATE_CONTEXT_PROCESSORS and TEMPLATES
-# are even envessary, and if not, remove.
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "social_django.context_processors.backends",
-    "social_django.context_processors.login_redirect",
-)
+TEMPLATE_DIRS    = [
+    os.path.join(BASE_DIR, "templates"),
+]
 
+# # Reminder: edit the files in STATICFILES_DIRS. the ones in static are auto generated.
+STATICFILES_DIRS = [os.path.join(BASE_DIR,"staticfiles")]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATIC_URL = '/static/'
+MEDIA_URL= '/media/'
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': TEMPLATE_DIRS,
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -92,8 +89,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "social_django.context_processors.backends",
-                "social_django.context_processors.login_redirect",
             ],
         },
     },
@@ -105,16 +100,23 @@ WSGI_APPLICATION = "gos.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": env("DB_NAME"),
+#         "USER": env("DB_USER"),
+#         "PASSWORD": env("DB_PASSWORD"),
+#         "HOST": env("DB_HOST"),
+#         "PORT": env("DB_PORT"),
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
-        "HOST": env("DB_HOST"),
-        "PORT": env("DB_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}    
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -137,27 +139,12 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
-        # OAuth
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
-        'drf_social_oauth2.authentication.SocialAuthentication',
-        # / OAuth
-
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 AUTHENTICATION_BACKENDS = (
-    # list of supported backends:
-    # https://python-social-auth.readthedocs.io/en/latest/backends/index.html#supported-backends
-
-    "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-
-seconds_1_month = 2.628e6
-oauth2_settings.DEFAULTS['ACCESS_TOKEN_EXPIRE_SECONDS'] = seconds_1_month
-
-ACTIVATE_JWT = True
-SOCIAL_AUTH_JSONFIELD_ENABLED = True # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -173,8 +160,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = "static/"
+# # Reminder: edit the files in STATICFILES_DIRS. the ones in static are auto generated.
+STATICFILES_DIRS = [os.path.join(BASE_DIR,"staticfiles")]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATIC_URL = '/static/'
+MEDIA_URL= '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
