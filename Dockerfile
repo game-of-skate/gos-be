@@ -5,21 +5,29 @@ FROM python:3.11.3-slim-buster
 WORKDIR /app
 
 # set environment variables
-# PYTHONDONTWRITEBYTECODE Prevents Python from writing pyc files to disc (equivalent to python -B option)
 ENV PYTHONDONTWRITEBYTECODE 1
-# PYTHONUNBUFFERED: Prevents Python from buffering stdout and stderr (equivalent to python -u option)
 ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
-RUN apt-get update && apt-get install make -y netcat
+RUN apt-get update && \
+    apt-get install -y \
+    make \
+    netcat \
+    gcc \
+    postgresql-client \
+    libpq-dev \
+    python3-dev
 
 # install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /app/
-RUN pip install --requirement /app/requirements.txt
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
 # copy project
 COPY . /app/
 
-# run entrypoint.sh
-ENTRYPOINT ["sh", "/app/scripts/entrypoint.sh"]
+# Make sure the entrypoint script exists and is executable
+COPY scripts/entrypoint.sh /app/scripts/
+RUN chmod +x /app/scripts/entrypoint.sh
+
+ENTRYPOINT ["/app/scripts/entrypoint.sh"]

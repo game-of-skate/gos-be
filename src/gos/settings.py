@@ -47,14 +47,35 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",  # needed for 'allauth.socialaccount'
 ]
 # 3rd party apps
 INSTALLED_APPS += [
     "rest_framework",
+    # <rest auth>
     "rest_framework.authtoken",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    # </rest auth>
+    # <social auth>
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    #'allauth.socialaccount.providers.apple',
+    # https://docs.allauth.org/en/latest/socialaccount/providers/apple.html
+    #'allauth.socialaccount.providers.facebook',
+    # https://docs.allauth.org/en/latest/socialaccount/providers/facebook.html
+    "allauth.socialaccount.providers.google",
+    # 'allauth.socialaccount.providers.instagram',
+    # https://docs.allauth.org/en/latest/socialaccount/providers/instagram.html
+    # 'allauth.socialaccount.providers.telegram',
+    # https://docs.allauth.org/en/latest/socialaccount/providers/telegram.html
+    # </social auth>
 ]
 # original apps
 INSTALLED_APPS += []
+
+SITE_ID = 1  # needed for 'allauth.socialaccount'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -64,6 +85,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Add the account middleware: (allauth)
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "gos.urls"
@@ -71,13 +94,6 @@ ROOT_URLCONF = "gos.urls"
 TEMPLATE_DIRS    = [
     os.path.join(BASE_DIR, "templates"),
 ]
-
-# # Reminder: edit the files in STATICFILES_DIRS. the ones in static are auto generated.
-STATICFILES_DIRS = [os.path.join(BASE_DIR,"staticfiles")]
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-STATIC_URL = '/static/'
-MEDIA_URL= '/media/'
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -100,23 +116,17 @@ WSGI_APPLICATION = "gos.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": env("DB_NAME"),
-#         "USER": env("DB_USER"),
-#         "PASSWORD": env("DB_PASSWORD"),
-#         "HOST": env("DB_HOST"),
-#         "PORT": env("DB_PORT"),
-#     }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
-}    
+}
+ 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -125,15 +135,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 REST_FRAMEWORK = {
@@ -143,7 +147,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by email
+    #'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 # Internationalization
@@ -171,3 +178,26 @@ MEDIA_URL= '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# see https://docs.allauth.org/en/latest/socialaccount/configuration.html
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_ONLY = True
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    # For each OAuth based provider, either add a ``SocialApp``
+    # (``socialaccount`` app) containing the required client
+    # credentials, or list them here:
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APP": {
+            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_CLIENT_ID", ""),
+            "secret": env("DJANGO_SOCIALACCOUNT_GOOGLE_SECRET", ""),
+            "key": env("DJANGO_SOCIALACCOUNT_GOOGLE_KEY", ""),
+        },
+        # The following provider-specific settings will be used for all apps:
+        "SCOPE": ["profile", "email",],
+        "AUTH_PARAMS": {"access_type": "online",},
+    }
+}

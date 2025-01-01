@@ -1,27 +1,27 @@
 services:
 
-  web:    
-    build: .
-    command: ["python", "src/gos/manage.py", "runserver", "0.0.0.0:8000"]
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    env_file:
-      - src/gos/.env
+  # web:    
+  #   build: .
+  #   command: ["python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+  #   env_file:
+  #     - src/gos/.env
   
   db:
     image: postgres:13
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data/ 
     environment:
-      POSTGRES_USER: db_user
-      POSTGRES_PASSWORD: db_password
-      POSTGRES_DB: db_name
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=db_password
+      - POSTGRES_DB=db_name
     ports:
-      - 5432:5432      
+      - "5432:5432"      
       # by default postgres listens on 5432
 
   db_test:

@@ -8,7 +8,7 @@ done
 echo "PostgreSQL started"
 
 
-if [ "$ENV" = "dev" ]; then
+if [ "$ENV" != "prod" ]; then
     echo "running migrations"
     python src/gos/manage.py migrate
     python src/gos/manage.py createsuperuser --noinput

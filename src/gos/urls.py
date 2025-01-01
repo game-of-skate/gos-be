@@ -7,12 +7,14 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # do i need api-auth?
     path("api-auth/", include("rest_framework.urls")),
-
+    
+    path("dj-rest-auth/", include("dj_rest_auth.urls")),
+    path("dj-rest-auth/registration/", include("dj_rest_auth.registration.urls")),
     path('terms-of-service/', TemplateView.as_view(template_name="tos.html"), name='terms-of-service'),
     path('privacy-policy/', TemplateView.as_view(template_name="privacy_policy_app.html"), name='privacy'),
     path('support/', TemplateView.as_view(template_name="support.html"), name='support'),
-
 ]
 
 if settings.DEBUG==True:
