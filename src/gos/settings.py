@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR,"gos", ".env"))
+environ.Env.read_env(os.path.join(BASE_DIR, "gos", ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -52,30 +52,18 @@ INSTALLED_APPS = [
 # 3rd party apps
 INSTALLED_APPS += [
     "rest_framework",
-    # <rest auth>
-    "rest_framework.authtoken",
-    "dj_rest_auth",
-    "dj_rest_auth.registration",
-    # </rest auth>
     # <social auth>
     "allauth",
     "allauth.account",
+    "allauth.headless",
+    # I don't know yet if i want mfa and usersessions
+    # 'allauth.mfa',
+    # 'allauth.usersessions',
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    # TODO: add apple after google works
     #'allauth.socialaccount.providers.apple',
     # https://docs.allauth.org/en/latest/socialaccount/providers/apple.html
-    
-    #'allauth.socialaccount.providers.facebook',
-    # https://docs.allauth.org/en/latest/socialaccount/providers/facebook.html
-    
-    # NOTE i made android and ios clients but i don't understand the callback url in these docs
-    # https://dj-rest-auth.readthedocs.io/en/latest/installation.html#google
-    # did not set that, maybe these are not written for mobile and i need to do custom stuff?
-    #"allauth.socialaccount.providers.google",
-    
-    # 'allauth.socialaccount.providers.instagram',
-    # https://docs.allauth.org/en/latest/socialaccount/providers/instagram.html
-    
-    'allauth.socialaccount.providers.telegram',
     # </social auth>
 ]
 # original apps
@@ -97,13 +85,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "gos.urls"
 
-TEMPLATE_DIRS    = [
+TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, "templates"),
 ]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': TEMPLATE_DIRS,
+        "DIRS": TEMPLATE_DIRS,
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -132,7 +120,7 @@ DATABASES = {
         "PORT": env("DB_PORT"),
     }
 }
- 
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -156,8 +144,15 @@ AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by email
-    #'allauth.account.auth_backends.AuthenticationBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
+
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = (
+    True  # if they have account w/ applle and google, same email, connect them.
+)
+SOCIALACCOUNT_ONLY = True  # this means cannot create local-only user account, only social (google, apple, etc)
+HEADLESS_ONLY = True  # This means no browser login views
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -174,11 +169,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 # # Reminder: edit the files in STATICFILES_DIRS. the ones in static are auto generated.
-STATICFILES_DIRS = [os.path.join(BASE_DIR,"staticfiles")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-STATIC_URL = '/static/'
-MEDIA_URL= '/media/'
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -194,33 +189,19 @@ SOCIALACCOUNT_PROVIDERS = {
     # (``socialaccount`` app) containing the required client
     # credentials, or list them here:
     "google": {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        # NOTE it looks like secret and key are web only ... ? not sure.
         "APPS": [
             {
-            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_ANDROID_CLIENT_ID", ""),
+                "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_GOOGLE_WEB_CLIENT_ID", default=""
+                ),
+                "secret": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_SECRET", default=""),
+                "key": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_KEY", default=""),
             },
-            {
-            "client_id": env("DJANGO_SOCIALACCOUNT_GOOGLE_IOS_CLIENT_ID", ""),
-            },            
         ],
         # The following provider-specific settings will be used for all apps:
         "SCOPE": ["profile", "email",],
-        'AUTH_PARAMS': {
-            'access_type': 'offline',
-        },
         "AUTH_PARAMS": {"access_type": "online",},
+        "OAUTH_PKCE_ENABLED": True,
+        "FETCH_USERINFO": True,
     },
-    'telegram': {
-        # Attention! If your server time is different from the telegram server time, you need NTP.
-        'APP': {
-            "client_id": env("DJANGO_SOCIALACCOUNT_TELEGRAM_BOT_ID", ""),
-            "secret": env("DJANGO_SOCIALACCOUNT_TELEGRAM_BOT_SECRET", ""),
-        },
-        # The default value of the auth_date_validity is 30 seconds.
-        'AUTH_PARAMS': {'auth_date_validity': 30},
-    }
-
 }
