@@ -1,4 +1,8 @@
 start-docker:
+	brew services stop postgresql # stop postgres if it's running
+	&& docker-compose build --no-cache
+
+run-docker:
 	docker-compose up
 
 stop-docker:
