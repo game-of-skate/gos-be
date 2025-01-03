@@ -183,6 +183,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # see https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_ONLY = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     # For each OAuth based provider, either add a ``SocialApp``
