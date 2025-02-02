@@ -111,14 +111,19 @@ WSGI_APPLICATION = "gos.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": env("DB_NAME"),
+    #     "USER": env("DB_USER"),
+    #     "PASSWORD": env("DB_PASSWORD"),
+    #     "HOST": env("DB_HOST"),
+    #     "PORT": env("DB_PORT"),
+    # }
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
-        "HOST": env("DB_HOST"),
-        "PORT": env("DB_PORT"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
+
 }
 
 
@@ -184,6 +189,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_ONLY = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_ADAPTER = 'auth.adapter.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'auth.adapter.SocialAccountAdapter'
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     # For each OAuth based provider, either add a ``SocialApp``
@@ -196,13 +203,23 @@ SOCIALACCOUNT_PROVIDERS = {
                     "DJANGO_SOCIALACCOUNT_GOOGLE_WEB_CLIENT_ID", default=""
                 ),
                 "secret": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_SECRET", default=""),
-                "key": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_KEY", default=""),
+                # key is not needed for google
             },
+            {
+                "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_GOOGLE_IOS_CLIENT_ID", default=""
+                ),
+            },
+            {
+                "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_GOOGLE_ANDROID_CLIENT_ID", default=""
+                ),
+            },                        
         ],
         # The following provider-specific settings will be used for all apps:
         "SCOPE": ["profile", "email",],
         "AUTH_PARAMS": {"access_type": "online",},
         "OAUTH_PKCE_ENABLED": True,
-        "FETCH_USERINFO": True,
+        "FETCH_USERINFO": False,
     },
 }

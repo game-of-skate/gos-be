@@ -4,6 +4,8 @@ from django.conf import settings
 from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from allauth.headless.constants import Client
+from auth.views import login_by_token
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,6 +27,11 @@ urlpatterns = [
     path("_allauth/", include("allauth.headless.urls")),
     # api-auth only if intend to use the browsable API
     # path("api-auth/", include("rest_framework.urls")),
+    path(
+        "auth/social/login/google",
+        login_by_token,
+        name="google-login",
+    ),
 ]
 
 if settings.DEBUG == True:
