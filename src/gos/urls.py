@@ -22,7 +22,7 @@ urlpatterns = [
     ),
     path("accounts/", include("allauth.urls")),
 
-    # path("_allauth/", include("allauth.headless.urls")),
+    path("_allauth/", include("allauth.headless.urls")),
     # I don't like the headless allauth url structure, renamed here:
     path("auth/", include("auth.urls")),
     # api-auth only if intend to use the browsable API
