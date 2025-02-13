@@ -1,0 +1,66 @@
+System check identified 1 issue (0 silenced).
+February 13, 2025 - 06:25:06
+Django version 4.2.17, using settings 'gos.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+
+get_provider
+provider: google
+client_id: <MY REDACTED GOOGLE CLINET ID>>
+provider_class <class 'allauth.socialaccount.providers.google.provider.GoogleProvider'>
+
+get_app
+settings backed apps
+apps for google: []
+apps final: [<SocialApp: >]
+apps length: 1
+apps [<SocialApp: >]
+app: 
+
+new_user
+
+get_provider
+provider: google
+client_id: None
+Internal Server Error: /_allauth/app/v1/auth/provider/token
+Traceback (most recent call last):
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/internal/decorators.py", line 26, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/base/views.py", line 27, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/internal/restkit/views.py", line 17, in dispatch
+    return self.handle(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/internal/restkit/views.py", line 25, in handle
+    return super().dispatch(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/socialaccount/views.py", line 97, in post
+    complete_token_login(request, sociallogin)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/headless/socialaccount/internal.py", line 55, in complete_token_login
+    flows.login.complete_login(request, sociallogin, raises=True)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/socialaccount/internal/flows/login.py", line 46, in complete_login
+    pre_social_login(request, sociallogin)
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/socialaccount/internal/flows/login.py", line 37, in pre_social_login
+    sociallogin.lookup()
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/socialaccount/models.py", line 315, in lookup
+    self._lookup_by_email()
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/socialaccount/models.py", line 363, in _lookup_by_email
+    if not get_adapter().can_authenticate_by_email(self, email):
+  File "/Users/micheladaizovi/dev/django/gos-be/src/auth/adapter.py", line 376, in can_authenticate_by_email
+    provider = login.account.get_provider()
+  File "/Users/micheladaizovi/dev/django/gos-be/venv/lib/python3.9/site-packages/allauth/socialaccount/models.py", line 147, in get_provider
+    provider = self._provider = adapter.get_provider(
+  File "/Users/micheladaizovi/dev/django/gos-be/src/auth/adapter.py", line 223, in get_provider
+    raise Exception
+Exception
+[13/Feb/2025 06:25:14] "POST /_allauth/app/v1/auth/provider/token HTTP/1.1" 500 131345
+

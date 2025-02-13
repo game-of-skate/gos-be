@@ -1,0 +1,42 @@
+System check identified 1 issue (0 silenced).
+February 13, 2025 - 06:54:14
+Django version 4.2.17, using settings 'gos.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+
+get_provider
+provider: google
+client_id: <MY REDACTED GOOGLE CLINET ID>>
+provider_class <class 'allauth.socialaccount.providers.google.provider.GoogleProvider'>
+
+get_app
+settings backed apps
+apps for google: []
+apps final: [<SocialApp: >]
+apps length: 1
+apps [<SocialApp: >]
+app: 
+
+new_user
+
+get_provider
+provider: google
+client_id: None
+no client_id, grbbing from from token.request
+client_id from request: <MY REDACTED GOOGLE CLINET ID>>
+provider_class <class 'allauth.socialaccount.providers.google.provider.GoogleProvider'>
+
+get_app
+settings backed apps
+apps for google: []
+apps final: [<SocialApp: >]
+apps length: 1
+apps [<SocialApp: >]
+app: 
+
+pre_social_login
+
+save_user
+[13/Feb/2025 06:54:20] "POST /_allauth/app/v1/auth/provider/token HTTP/1.1" 200 274
+
