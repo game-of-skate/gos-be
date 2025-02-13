@@ -1,6 +1,6 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-
+import json
 import functools
 import warnings
 
@@ -219,6 +219,17 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         print("\nget_provider")
         print(f"provider: {provider}")
         print(f"client_id: {client_id}")
+        
+        if not client_id:
+            print(f"no client_id, grbbing from from token.request")  
+            # check request body for provider, which will be there if this was initiated from
+            # a call to _allauth/app/v1/auth/provider/token
+            request_body = json.loads(request.body)
+            token = request_body.get("token")
+            if token:
+                client_id = token.get("client_id")    
+                print(f"client_id from request: {client_id}")    
+        
         from allauth.socialaccount.providers import registry
 
         provider_class = registry.get_class(provider)

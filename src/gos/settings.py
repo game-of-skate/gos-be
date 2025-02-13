@@ -204,7 +204,19 @@ SOCIALACCOUNT_PROVIDERS = {
                 ),
                 "secret": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_SECRET", default=""),
                 # key is not needed for google
-            },
+            },   
+            # Delete me!
+            {
+                "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_GOOGLE_ANDROID_CLIENT_ID", default=""
+                ),
+            },  
+            {
+                "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_GOOGLE_IOS_CLIENT_ID", default=""
+                ),
+            }, 
+            ####
         ],
         # The following provider-specific settings will be used for all apps:
         "SCOPE": ["profile", "email",],
