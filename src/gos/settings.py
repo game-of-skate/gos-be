@@ -61,9 +61,7 @@ INSTALLED_APPS += [
     # 'allauth.usersessions',
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    # TODO: add apple after google works
-    #'allauth.socialaccount.providers.apple',
-    # https://docs.allauth.org/en/latest/socialaccount/providers/apple.html
+    'allauth.socialaccount.providers.apple',
     # </social auth>
 ]
 # original apps
@@ -216,4 +214,23 @@ SOCIALACCOUNT_PROVIDERS = {
         "OAUTH_PKCE_ENABLED": True,
         "FETCH_USERINFO": False,
     },
+    "apple": {
+        "APPS": [{
+            "client_id": env.str(
+                    "DJANGO_SOCIALACCOUNT_APPLE_CLIENT_ID", default=""
+                ),
+            "secret": env.str(
+                    "DJANGO_SOCIALACCOUNT_APPLE_KEY_ID", default=""
+                ),
+            "key": env.str(
+                    "DJANGO_SOCIALACCOUNT_APPLE_APP_ID", default=""
+                ),
+            "settings": {
+                "certificate_key": env.str(
+                    "DJANGO_SOCIALACCOUNT_APPLE_CERTIFICATE_KEY", default=""
+                ).replace(r"\n", "\n"),
+
+            }
+        }]
+    }
 }
