@@ -219,8 +219,6 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         print("\nget_provider")
         print(f"provider: {provider}")
         print(f"client_id: {client_id}")
-        if client_id is None:
-            raise Exception
         from allauth.socialaccount.providers import registry
 
         provider_class = registry.get_class(provider)
