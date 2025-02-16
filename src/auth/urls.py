@@ -3,6 +3,9 @@ from allauth.headless.socialaccount import views
 from django.urls import path, include
 
 urlpatterns = [
+        # path("_allauth/", include("allauth.headless.urls")),
+        # I don't like the headless allauth url structure, renamed here:
+
         # NOTE: if you ever want to support web and not just the mobil app,
         # copy this line but change 'app' to 'browser' 
         # This is this url but at a different url pattern:
