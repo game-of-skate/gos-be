@@ -3,7 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.sessions.models import Session
 
+from rest_framework.permissions import IsAuthenticated
+
+from ..auth import SessionTokenAuthentication
+
 class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (SessionTokenAuthentication,)
+
     def post(self, request):
         session_token = request.META.get("HTTP_X_SESSION_TOKEN")
         if not session_token:
