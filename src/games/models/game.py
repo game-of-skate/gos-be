@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 
 
-
 # TODO local is a bool? or 2 tables?
 class Game(models.Model):
     name = models.CharField(max_length=150)

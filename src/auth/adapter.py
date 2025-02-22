@@ -2,9 +2,10 @@ import json
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
+
 class AccountAdapter(DefaultAccountAdapter):
     pass
-        
+
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
@@ -24,4 +25,6 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             if token:
                 client_id = token.get("client_id")
 
-        return super().get_provider(request=request, provider=provider, client_id=client_id)
+        return super().get_provider(
+            request=request, provider=provider, client_id=client_id
+        )

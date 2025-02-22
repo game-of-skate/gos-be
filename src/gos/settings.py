@@ -61,7 +61,7 @@ INSTALLED_APPS += [
     # 'allauth.usersessions',
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    'allauth.socialaccount.providers.apple',
+    "allauth.socialaccount.providers.apple",
     # </social auth>
 ]
 # original apps
@@ -114,7 +114,6 @@ if ENVIRONMENT == "local":
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
-
     }
 else:
     DATABASES = {
@@ -126,7 +125,7 @@ else:
             "HOST": env("DB_HOST"),
             "PORT": env("DB_PORT"),
         }
-}
+    }
 
 
 # Password validation
@@ -136,9 +135,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 REST_FRAMEWORK = {
@@ -153,13 +158,6 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by email
     "allauth.account.auth_backends.AuthenticationBackend",
 )
-
-ACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = (
-    True  # if they have account w/ applle and google, same email, connect them.
-)
-SOCIALACCOUNT_ONLY = True  # this means cannot create local-only user account, only social (google, apple, etc)
-HEADLESS_ONLY = True  # This means no browser login views
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -188,11 +186,16 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # see https://docs.allauth.org/en/latest/socialaccount/configuration.html
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = (
+    True  # if they have account w/ applle and google, same email, connect them.
+)
+SOCIALACCOUNT_ONLY = True  # this means cannot create local-only user account, only social (google, apple, etc)
+HEADLESS_ONLY = True  # This means no browser login views
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
-SOCIALACCOUNT_ONLY = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_ADAPTER = 'auth.adapter.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'auth.adapter.SocialAccountAdapter'
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_ADAPTER = "auth.adapter.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "auth.adapter.SocialAccountAdapter"
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     # For each OAuth based provider, either add a ``SocialApp``
@@ -206,31 +209,33 @@ SOCIALACCOUNT_PROVIDERS = {
                 ),
                 "secret": env.str("DJANGO_SOCIALACCOUNT_GOOGLE_WEB_SECRET", default=""),
                 # key is not needed for google
-            },                      
+            },
         ],
         # The following provider-specific settings will be used for all apps:
-        "SCOPE": ["profile", "email",],
-        "AUTH_PARAMS": {"access_type": "online",},
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
         "OAUTH_PKCE_ENABLED": True,
         "FETCH_USERINFO": False,
     },
     "apple": {
-        "APPS": [{
-            "client_id": env.str(
+        "APPS": [
+            {
+                "client_id": env.str(
                     "DJANGO_SOCIALACCOUNT_APPLE_CLIENT_ID", default=""
                 ),
-            "secret": env.str(
-                    "DJANGO_SOCIALACCOUNT_APPLE_KEY_ID", default=""
-                ),
-            "key": env.str(
-                    "DJANGO_SOCIALACCOUNT_APPLE_APP_ID", default=""
-                ),
-            "settings": {
-                "certificate_key": env.str(
-                    "DJANGO_SOCIALACCOUNT_APPLE_CERTIFICATE_KEY", default=""
-                ).replace(r"\n", "\n"),
-
+                "secret": env.str("DJANGO_SOCIALACCOUNT_APPLE_KEY_ID", default=""),
+                "key": env.str("DJANGO_SOCIALACCOUNT_APPLE_APP_ID", default=""),
+                "settings": {
+                    "certificate_key": env.str(
+                        "DJANGO_SOCIALACCOUNT_APPLE_CERTIFICATE_KEY", default=""
+                    ).replace(r"\n", "\n"),
+                },
             }
-        }]
-    }
+        ]
+    },
 }
