@@ -10,6 +10,8 @@ Requirements:
  - clone this repo
  - `cd` into `gos-be`
  - `make start-docker`
+ After docker is finished, please run:
+ - `make run-server`
 
 navigate to [http://localhost:8000/admin/login/?next=/admin/](http://localhost:8000/admin/login/?next=/admin/) in your broser and log in with the `DJANGO_SUPERUSER_USERNAME` and `DJANGO_SUPERUSER_PASSWORD` in 
 `src/gos/.env`
