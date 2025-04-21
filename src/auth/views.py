@@ -4,8 +4,7 @@ from rest_framework import status
 from django.contrib.sessions.models import Session
 
 from rest_framework.permissions import IsAuthenticated
-
-from ..auth import SessionTokenAuthentication
+from gos.auth import SessionTokenAuthentication
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
